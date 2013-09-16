@@ -191,6 +191,24 @@ displayTrains = function() {
 		"class": function(d) { console.log(d); return d.data.label; }
 	});
 
+	// Now let's make a force-directed chart out of the trains.
+	force = d3.layout.force()
+		.nodes(trainData)
+		.size([400,400])
+		.on("tick",tick)
+		.start();
+
+	forceChart = d3.select("trainBubbles .bubbles").selectAll(".bubble").data(trainData);
+
+	forceChart.enter().append("circle")
+		.attr("class","trainBubble")
+		.attr("cx",function(d) { return d.x })
+		.attr("cy",function(d) { return d.y })
+		.attr("r",8)
+		.style("fill","#ccc")
+		.call(force.drag)
+ 
+
 };
 
 updateTrains();
