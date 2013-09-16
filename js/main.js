@@ -3,6 +3,8 @@ stationData = "";
 
 trainListContainer = d3.select("#trainList");
 
+dashStatus = [];
+
 
 /*
  * Update station list
@@ -36,22 +38,66 @@ updateTrains = function() {
 		
 		// Let's do some post-processing of the data to extract a little
 		// more information out of that public message.
+
+		// While we're steping through this, generating the data,
+		// let's create a parallel data set that we'll use
+		// to build a pie chart of train status.
+		dashStatus = [
+			{
+				label: 'waiting',
+				value: 0
+			},
+			{
+				label: 'early',
+				value: 0
+			},
+			{
+				label: 'ontime',
+				value: 0
+			},
+			{
+				label: 'late',
+				value: 0
+			},
+			{
+				label: 'verylate',
+				value: 0
+			}
+		];
+
+		// Walk the data set.
 		trainData.forEach(function(entry){
 			parts = entry.PublicMessage.split('\\n');
 			entry.Route = parts[1];
 			entry.Update = parts[2];
+
+
 			if (entry.TrainStatus == "N") {
-				entry.LateClass = "waiting"				
+				entry.LateClass = "waiting"	
+				dashStatus[0].value++			
 				return;
 			}
 			late = entry.PublicMessage.match(/\(([\-0-9].*) mins late\)/);
 			entry.Late = late[1];
-			if (entry.Late < 0) entry.LateClass = "early";
-			else if (entry.Late < 5) entry.LateClass = "ontime"
-			else if (entry.Late < 15) entry.LateClass = "late"
-			else (entry.LateClass) = "verylate"
-
+			if (entry.Late < 0) {
+				entry.LateClass = "early";
+				dashStatus[1].value++;
+			}
+			else if (entry.Late < 5) {
+				entry.LateClass = "ontime";
+				dashStatus[2].value++;
+			}
+			else if (entry.Late < 15) {
+				entry.LateClass = "late";
+				dashStatus[3].value++;
+			}
+			else {
+				entry.LateClass = "verylate";
+				dashStatus[4].value++;
+			}
 		});
+
+		console.log(dashStatus);
 
 		displayTrains();
 	});
@@ -119,6 +165,31 @@ displayTrains = function() {
 	});
 
 	trainList.select("span").text(function(d) { return d.TrainCode + " " + d.Route })
+
+	// Our pie chart gets updated when the trains are, too, so let's test that out.
+
+	arc = d3.svg.arc()
+		.outerRadius(150)
+		.innerRadius(50);
+
+	pie = d3.layout.pie()
+		.sort(null)
+		.value(function(d) {return d.value})
+
+	pieChart = d3.select("#onTimePortion .pieTarget").selectAll(".arc")
+		.data(pie(dashStatus))
+		
+	pieChart.enter()
+		.append("g")
+		.attr("class","arc")
+		.append("path")
+
+	pieChart.exit().remove()
+
+	pieChart.select("path").transition().attr({
+		"d": arc,
+		"class": function(d) { console.log(d); return d.data.label; }
+	});
 
 };
 

@@ -52,8 +52,23 @@
 			background-color: #900;	
 			color: #fff;
 			font-weight: bold;
-		}					
-		#trainList 
+		}	
+		/* SVG Styles */
+		path.waiting {
+			fill: #333;
+		}	
+		path.early {
+			fill: #66f;
+		}
+		path.ontime {
+			fill: #393;
+		}	
+		path.late {
+			fill: #fc0;
+		}	
+		path.verylate {
+			fill: #900;
+		}	
 	</style>
 </head>
 <body>
@@ -66,7 +81,14 @@
 			</ul>
 		</div>
 		<div class="right-col span8">
-			
+			<svg width="400px" height="400px" id="onTimePortion">
+				<g class="pieTarget" transform="translate(200,200)"></g>
+			</svg>
+			<svg width="400px" height="400px" id="trainBubbles">
+				<g class="bubbles">
+
+				</g>
+			</svg>
 		</div>
 
 	</section>
