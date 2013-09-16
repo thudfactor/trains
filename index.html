@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Irish Trains</title>
+	<script src="http://codeorigin.jquery.com/jquery-2.0.3.min.js"></script>
+	<script src="/components/bootstrap/js/bootstrap.min.js"></script>
+	<script src="/components/d3.v3.min.js"></script>
+	<link rel="stylesheet" href="/components/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="/css/main.css" />
+	<style>
+		#trainList [data-status="N"] {
+			color: #ccc;
+		}
+		#trainList [data-status="R"] {
+			color: #060;
+		}		
+		#trainList [data-status="T"] {
+			color: #600;
+		}				
+	</style>
+</head>
+<body>
+	<header>
+		<h1>D3 Demo: Irish Train Service</h1>
+	</header>
+	<section class="rows">
+
+	<h2>Stations:</h2>
+		<ul id="stationList">
+		</ul>
+
+	<h2>Trains:</h2>
+		<ul id="trainList">
+		</ul>
+
+	</section>
+	<footer>
+
+	</footer>
+	<script src="/js/main.js"></script>
+</body>
+</html>
