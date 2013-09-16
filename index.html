@@ -7,32 +7,67 @@
 	<script src="/components/bootstrap/js/bootstrap.min.js"></script>
 	<script src="/components/d3.v3.min.js"></script>
 	<link rel="stylesheet" href="/components/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="/components/bootstrap/css/bootstrap-responsive.min.css" />
+	<link rel="stylesheet" href="/components/font-awesome/css/font-awesome.min.css" />
 	<link rel="stylesheet" href="/css/main.css" />
 	<style>
+		#trainList {
+			font-size: 11px;
+			margin: 0; padding: 0;
+		}
+		#trainList li {
+			padding: 2px 4px;
+			margin: 0;
+			list-style: none;
+		}
+		#trainList i {
+			margin-right: 5px;
+		}
+		#trainList [data-status] {
+			-webkit-transition: background-color 1000ms linear;
+			-moz-transition: background-color 1000ms linear;
+			transition: background-color 1000ms linear;
+			background-color: #fff;
+		}
 		#trainList [data-status="N"] {
-			color: #ccc;
+			color: #999;
+			font-style: italic;
 		}
 		#trainList [data-status="R"] {
-			color: #060;
+			color: #333;
 		}		
 		#trainList [data-status="T"] {
-			color: #600;
-		}				
+			color: #333;
+		}
+		#trainList [data-lateclass="early"] {
+			background-color: #ccf;
+		}
+		#trainList [data-lateclass="ontime"] {
+			background-color: #cfc;	
+		}
+		#trainList [data-lateclass="late"] {
+			background-color: #fc6;	
+		}
+		#trainList [data-lateclass="verylate"] {
+			background-color: #900;	
+			color: #fff;
+			font-weight: bold;
+		}					
+		#trainList 
 	</style>
 </head>
 <body>
 	<header>
 		<h1>D3 Demo: Irish Train Service</h1>
 	</header>
-	<section class="rows">
-
-	<h2>Stations:</h2>
-		<ul id="stationList">
-		</ul>
-
-	<h2>Trains:</h2>
-		<ul id="trainList">
-		</ul>
+	<section class="row">
+		<div class="left-col span4">
+			<ul id="trainList">
+			</ul>
+		</div>
+		<div class="right-col span8">
+			
+		</div>
 
 	</section>
 	<footer>
