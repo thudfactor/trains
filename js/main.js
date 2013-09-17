@@ -16,10 +16,14 @@ projection = d3.geo.albers()
 path = d3.geo.path().projection(projection);
 
 map = "";
+mapTrain = "";
+mapStation= "";
 
 updateMap = function() {
 	d3.json("mapping/ireland.json",function(error,data){
 		map = d3.select("#map .mapTarget");
+		mapTrain = d3.select("#map .trainTarget");
+		mapStation = d3.select("#map .stationTarget");
 
 		subunits = topojson.feature(data,data.objects.subunits);
 		
@@ -54,7 +58,6 @@ updateStations = function() {
  * Update train list
  */
 updateTrains = function() {
-	console.log("Updating trains.");
 	d3.json("api.php?q=trains",function(error,data){
 		// Make our API request; on return, the data is assigned
 		// to our global data object and the train display routine
@@ -136,11 +139,14 @@ updateTrains = function() {
  * Show the stations in a list
  */
 displayStations = function () {
-	map.selectAll(".station").data(stationData).enter()
-		.append("circle")
+	mapStation.selectAll(".station").data(stationData).enter()
+		.append("rect")
 		.attr({
+			"x": -5,
+			"y": -5,
+			"height": 10,
+			"width": 10,
 			"class": "station",
-			"r": 4,
 			"transform": function(d) {
 				return "translate(" + projection([d.StationLongitude,d.StationLatitude]) + ")";
 			}
@@ -166,7 +172,17 @@ displayTrains = function() {
 	// information a little more carefully.
 	//
 	// First, let's bind the data.
-	trainList = trainListContainer.selectAll("li").data(trainData);
+	//
+	// The second parameter in the data() method
+	// describes a "key" function for object constancy.
+	// This is needed to make sure that, despite the order
+	// of data, correct elements are added, removed, transformed.
+	// This is less critical when there's no animation, but with 
+	// animation it is very important. 
+	// 
+	// We will need to use this key anyhere we bind train data.
+	trainKey = function (d) {return d.TrainCode;}
+	trainList = trainListContainer.selectAll("li").data(trainData,trainKey);
 
 
 
@@ -209,23 +225,41 @@ displayTrains = function() {
 
 	// Show train positions on the map
 	
-	if(map.selectAll) {
-		trainPins = map.selectAll(".trains").data(trainData)
+	if(mapTrain.selectAll) {
+		trainPins = mapTrain.selectAll(".train").data(trainData,trainKey)
 
+		// We initialize the enter set with data elements (when we don't normally)
+		// because we are running transitions on them. If we don't add data at
+		// creation time here, we will transition from 0,0.
+		// We do want them to fade in instead of "pop" in, so we'll also set initial
+		// opacity to 0.
 		trainPins.enter()
 			.append("circle")
 			.attr({
-				"class": "trains",
-				"r": 2
+				"cx": 0,
+				"cy": 0,				
+				"class": "train",
+				"r": 4,
+				"transform": function(d) {
+					return "translate(" + projection([d.TrainLongitude,d.TrainLatitude]) + ")";
+				}				
 			});
 
 		trainPins.exit().remove();
 
-		trainPins.transition().attr({
-			"transform": function(d) {
-				return "translate(" + projection([d.TrainLongitude,d.TrainLatitude]) + ")";
-			}
-		});
+		// With the transition in place, we can see the trains "move"
+		// from point to point.
+		trainPins
+			.transition()
+				.duration(10000)
+			.attr({
+				"class": function(d) {
+					return "train " + d.LateClass;
+				},
+				"transform": function(d) {
+					return "translate(" + projection([d.TrainLongitude,d.TrainLatitude]) + ")";
+				}
+			});
 	}
 
 
@@ -259,41 +293,11 @@ displayTrains = function() {
 		"class": function(d) { return d.data.label; }
 	});
 
-	// Now let's make a force-directed chart out of the trains.
-	/*
-	force = d3.layout.force()
-		.nodes(trainData)
-		.size([400,400])
-		.on("tick",tick)
-		.start();
+}
 
-	forceChart = d3.select("trainBubbles .bubbles").selectAll(".bubble").data(trainData);
-
-	forceChart.enter().append("circle")
-		.attr("class","trainBubble")
-		.attr("cx",function(d) { return d.x })
-		.attr("cy",function(d) { return d.y })
-		.attr("r",8)
-		.style("fill","#ccc")
-		.call(force.drag);
-
-	node = forceChart.select("circle");
-
-	function tick(e) {
-		 var k = 6 * e.alpha;
-	  nodes.forEach(function(o, i) {
-	    o.y += i & 1 ? k : -k;
-	    o.x += i & 2 ? k : -k;
-	  });
-
-	  node.attr("cx", function(d) { return d.x; })
-	      .attr("cy", function(d) { return d.y; });
-		}
-		*/
-};
-
-updateTrains();
 updateMap();
+updateTrains();
+
 
 setInterval(updateTrains,15000);
 

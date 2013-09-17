@@ -12,92 +12,11 @@
 	<link rel="stylesheet" href="/components/font-awesome/css/font-awesome.min.css" />
 	<link rel="stylesheet" href="/css/main.css" />
 	<style>
-		#trainList {
-			font-size: 11px;
-			margin: 0; padding: 0;
-		}
-		#trainList li {
-			padding: 2px 4px;
-			margin: 0;
-			list-style: none;
-		}
-		#trainList i {
-			margin-right: 5px;
-		}
-		#trainList [data-status] {
-			-webkit-transition: background-color 1000ms linear;
-			-moz-transition: background-color 1000ms linear;
-			transition: background-color 1000ms linear;
-			background-color: #fff;
-		}
-		#trainList [data-status="N"] {
-			color: #999;
-			font-style: italic;
-		}
-		#trainList [data-status="R"] {
-			color: #333;
-		}		
-		#trainList [data-status="T"] {
-			color: #333;
-		}
-		#trainList [data-lateclass="early"] {
-			background-color: #ccf;
-		}
-		#trainList [data-lateclass="ontime"] {
-			background-color: #cfc;	
-		}
-		#trainList [data-lateclass="late"] {
-			background-color: #fc6;	
-		}
-		#trainList [data-lateclass="verylate"] {
-			background-color: #900;	
-			color: #fff;
-			font-weight: bold;
-		}	
-		/* SVG Styles */
-		path.waiting {
-			fill: #333;
-		}	
-		path.early {
-			fill: #66f;
-		}
-		path.ontime {
-			fill: #393;
-		}	
-		path.late {
-			fill: #fc0;
-		}	
-		path.verylate {
-			fill: #900;
-		}	
-		/* Map styles */
-		#map .frame {
-			border: 1px #333 solid;
-			fill: #006;
-		}
-		.ENG, .SCT, .WLS {
-			fill: #ccc;
-		}
-		.IRL {
-			fill: #363;
-		}
-		.NIR {
-			fill: #676;
-		}
-		#map .station {
-			fill: none;
-			stroke: #000;
-			stroke-width: 1px;
-		}
-		#map .trains {
-			fill: #f00;
-		}
-
 	</style>
 </head>
 <body>
 	<header>
-		<h1>D3 Demo: Irish Train Service</h1>
+		<h1>IE Trn<span>spttr</span>: </h1>
 	</header>
 	<section class="row">
 		<div class="left-col span4">
@@ -110,9 +29,9 @@
 			</svg>
 			<svg width="800px" height="830px" id="map">
 				<rect class="frame" width="800px" height="830px" x="0" y="0" />
-				<g class="mapTarget">
-
-				</g>
+				<g class="mapTarget"></g>
+				<g class="stationTarget"></g>
+				<g class="trainTarget"></g>
 			</svg>
 		</div>
 

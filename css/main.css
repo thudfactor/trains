@@ -1,0 +1,95 @@
+#trainList {
+	font-size: 11px;
+	margin: 0; padding: 0;
+}
+#trainList li {
+	padding: 2px 4px;
+	margin: 0;
+	list-style: none;
+}
+#trainList i {
+	margin-right: 5px;
+}
+#trainList [data-status] {
+	-webkit-transition: background-color 1000ms linear;
+	-moz-transition: background-color 1000ms linear;
+	transition: background-color 1000ms linear;
+	background-color: #fff;
+}
+#trainList [data-status="N"] {
+	color: #999;
+	font-style: italic;
+}
+#trainList [data-status="R"] {
+	color: #333;
+}		
+#trainList [data-status="T"] {
+	color: #333;
+}
+#trainList [data-lateclass="early"] {
+	background-color: #ccf;
+}
+#trainList [data-lateclass="ontime"] {
+	background-color: #cfc;	
+}
+#trainList [data-lateclass="late"] {
+	background-color: #fc6;	
+}
+#trainList [data-lateclass="verylate"] {
+	background-color: #900;	
+	color: #fff;
+	font-weight: bold;
+}	
+/* SVG Styles */
+path.waiting {
+	fill: #333;
+}	
+path.early {
+	fill: #66f;
+}
+path.ontime {
+	fill: #393;
+}	
+path.late {
+	fill: #fc0;
+}	
+path.verylate {
+	fill: #900;
+}	
+/* Map styles */
+#map .frame {
+	border: 1px #333 solid;
+	fill: #006;
+}
+.ENG, .SCT, .WLS {
+	fill: #ccc;
+}
+.IRL {
+	fill: #363;
+}
+.NIR {
+	fill: #676;
+}
+#map .station {
+	fill: #333;
+}
+#map .train {
+	fill: #666;
+}
+
+#map .train.ontime {
+	fill: #cfc;
+}
+
+#map .train.early {
+	fill: #ccf;
+}
+
+#map .train.late {
+	fill: #fc6;
+}
+
+#map .train.verylate {
+	fill: #900;
+}
+
