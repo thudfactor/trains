@@ -208,17 +208,25 @@ displayTrains = function() {
 	trainList.select("span").text(function(d) { return d.TrainCode + " " + d.Route })
 
 	// Show train positions on the map
-	if(map.selectAll)
-		map.selectAll(".trains").data(trainData).enter()
+	
+	if(map.selectAll) {
+		trainPins = map.selectAll(".trains").data(trainData)
+
+		trainPins.enter()
 			.append("circle")
 			.attr({
 				"class": "trains",
-				"r": 2,
-				"transform": function(d) {
-					console.log(d)
-					return "translate(" + projection([d.TrainLongitude,d.TrainLatitude]) + ")";
-				}
+				"r": 2
 			});
+
+		trainPins.exit().remove();
+
+		trainPins.transition().attr({
+			"transform": function(d) {
+				return "translate(" + projection([d.TrainLongitude,d.TrainLatitude]) + ")";
+			}
+		});
+	}
 
 
 	// Our pie chart gets updated when the trains are, too, so let's test that out.
