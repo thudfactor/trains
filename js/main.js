@@ -10,7 +10,7 @@ projection = d3.geo.albers()
 			.center([-8, 53.3345])
 	    .rotate([1.5, -1.0])
 	    .parallels([50, 60])
-	    .scale(12000)
+	    .scale(10000)
 	    .translate([200,200])
 
 path = d3.geo.path().projection(projection);
@@ -266,8 +266,8 @@ displayTrains = function() {
 	// Our pie chart gets updated when the trains are, too, so let's test that out.
 
 	arc = d3.svg.arc()
-		.outerRadius(150)
-		.innerRadius(50);
+		.outerRadius(20)
+		.innerRadius(12);
 
 	pie = d3.layout.pie()
 		.sort(null)

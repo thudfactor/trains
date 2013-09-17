@@ -16,19 +16,21 @@
 </head>
 <body>
 	<header>
-		<h1>IE Trn<span>spttr</span>: </h1>
+		<h1 id="logo">
+			<svg width="40" height="40" id="onTimePortion">
+				<g class="pieTarget" transform="translate(20,20)"></g>
+			</svg>
+			IE Trn<span>spttr</span>: 
+		</h1>
 	</header>
 	<section class="row">
-		<div class="left-col span4">
+		<div class="left-col span4 trainStatusBar">
 			<ul id="trainList">
 			</ul>
 		</div>
 		<div class="right-col span8">
-			<svg width="400px" height="400px" id="onTimePortion">
-				<g class="pieTarget" transform="translate(200,200)"></g>
-			</svg>
-			<svg width="800px" height="830px" id="map">
-				<rect class="frame" width="800px" height="830px" x="0" y="0" />
+			<svg width="700px" height="730px" id="map">
+				<rect class="frame" width="700px" height="730px" x="0" y="0" />
 				<g class="mapTarget"></g>
 				<g class="stationTarget"></g>
 				<g class="trainTarget"></g>

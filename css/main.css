@@ -1,3 +1,21 @@
+body {
+	padding: 1em;
+}
+
+#logo {
+	font-size: 56px;
+	line-height: 1.5;
+}
+
+#logo h1 {
+	margin: 0;
+}
+
+.trainStatusBar {
+	height: 730px;
+	overflow: auto;
+}
+
 #trainList {
 	font-size: 11px;
 	margin: 0; padding: 0;
@@ -40,20 +58,23 @@
 	color: #fff;
 	font-weight: bold;
 }	
-/* SVG Styles */
-path.waiting {
+/* Pie chart styles */
+#onTimePortion {
+	display: inline-block;
+}
+#onTimePortion path.waiting {
 	fill: #333;
 }	
-path.early {
+#onTimePortion  path.early {
 	fill: #66f;
 }
-path.ontime {
+#onTimePortion  path.ontime {
 	fill: #393;
 }	
-path.late {
+#onTimePortion path.late {
 	fill: #fc0;
 }	
-path.verylate {
+#onTimePortion  path.verylate {
 	fill: #900;
 }	
 /* Map styles */
