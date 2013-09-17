@@ -6,6 +6,7 @@
 	<script src="http://codeorigin.jquery.com/jquery-2.0.3.min.js"></script>
 	<script src="/components/bootstrap/js/bootstrap.min.js"></script>
 	<script src="/components/d3.v3.min.js"></script>
+	<script src="http://d3js.org/topojson.v1.min.js"></script>
 	<link rel="stylesheet" href="/components/bootstrap/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="/components/bootstrap/css/bootstrap-responsive.min.css" />
 	<link rel="stylesheet" href="/components/font-awesome/css/font-awesome.min.css" />
@@ -69,6 +70,29 @@
 		path.verylate {
 			fill: #900;
 		}	
+		/* Map styles */
+		#map .frame {
+			border: 1px #333 solid;
+			fill: #006;
+		}
+		.ENG, .SCT, .WLS {
+			fill: #ccc;
+		}
+		.IRL {
+			fill: #363;
+		}
+		.NIR {
+			fill: #676;
+		}
+		#map .station {
+			fill: none;
+			stroke: #000;
+			stroke-width: 1px;
+		}
+		#map .trains {
+			fill: #f00;
+		}
+
 	</style>
 </head>
 <body>
@@ -84,8 +108,9 @@
 			<svg width="400px" height="400px" id="onTimePortion">
 				<g class="pieTarget" transform="translate(200,200)"></g>
 			</svg>
-			<svg width="400px" height="400px" id="trainBubbles">
-				<g class="bubbles">
+			<svg width="800px" height="830px" id="map">
+				<rect class="frame" width="800px" height="830px" x="0" y="0" />
+				<g class="mapTarget">
 
 				</g>
 			</svg>

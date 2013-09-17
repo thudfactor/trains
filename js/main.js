@@ -5,6 +5,37 @@ trainListContainer = d3.select("#trainList");
 
 dashStatus = [];
 
+// Map variables; use several places.
+projection = d3.geo.albers()    
+			.center([-8, 53.3345])
+	    .rotate([1.5, -1.0])
+	    .parallels([50, 60])
+	    .scale(12000)
+	    .translate([200,200])
+
+path = d3.geo.path().projection(projection);
+
+map = "";
+
+updateMap = function() {
+	d3.json("mapping/ireland.json",function(error,data){
+		map = d3.select("#map .mapTarget");
+
+		subunits = topojson.feature(data,data.objects.subunits);
+		
+		map.selectAll(".subunit")
+			.data(subunits.features).enter()
+				.append("path")
+				.attr("class",function(d){ return "subunit " + d.id})
+				.attr("d",path)
+
+		// Lets get a station list so we can add these to the map
+		updateStations();
+
+	});
+
+}
+
 
 /*
  * Update station list
@@ -97,8 +128,6 @@ updateTrains = function() {
 			}
 		});
 
-		console.log(dashStatus);
-
 		displayTrains();
 	});
 };
@@ -107,6 +136,17 @@ updateTrains = function() {
  * Show the stations in a list
  */
 displayStations = function () {
+	map.selectAll(".station").data(stationData).enter()
+		.append("circle")
+		.attr({
+			"class": "station",
+			"r": 4,
+			"transform": function(d) {
+				return "translate(" + projection([d.StationLongitude,d.StationLatitude]) + ")";
+			}
+		});
+
+	/*
 	stationListContainer.selectAll("li")
 		.data(stationData)
 		.enter()
@@ -114,6 +154,7 @@ displayStations = function () {
 				.text(function(d){
 					return d.StationDesc;
 				});
+	*/
 };
 
 /*
@@ -166,6 +207,20 @@ displayTrains = function() {
 
 	trainList.select("span").text(function(d) { return d.TrainCode + " " + d.Route })
 
+	// Show train positions on the map
+	if(map.selectAll)
+		map.selectAll(".trains").data(trainData).enter()
+			.append("circle")
+			.attr({
+				"class": "trains",
+				"r": 2,
+				"transform": function(d) {
+					console.log(d)
+					return "translate(" + projection([d.TrainLongitude,d.TrainLatitude]) + ")";
+				}
+			});
+
+
 	// Our pie chart gets updated when the trains are, too, so let's test that out.
 
 	arc = d3.svg.arc()
@@ -175,6 +230,11 @@ displayTrains = function() {
 	pie = d3.layout.pie()
 		.sort(null)
 		.value(function(d) {return d.value})
+
+	// Remove 0-value items which sometimes show up anyway for why I don't know.
+	dashStatus = dashStatus.filter(function(e){
+		return (e.value > 0);
+	});
 
 	pieChart = d3.select("#onTimePortion .pieTarget").selectAll(".arc")
 		.data(pie(dashStatus))
@@ -188,10 +248,11 @@ displayTrains = function() {
 
 	pieChart.select("path").transition().attr({
 		"d": arc,
-		"class": function(d) { console.log(d); return d.data.label; }
+		"class": function(d) { return d.data.label; }
 	});
 
 	// Now let's make a force-directed chart out of the trains.
+	/*
 	force = d3.layout.force()
 		.nodes(trainData)
 		.size([400,400])
@@ -206,12 +267,25 @@ displayTrains = function() {
 		.attr("cy",function(d) { return d.y })
 		.attr("r",8)
 		.style("fill","#ccc")
-		.call(force.drag)
- 
+		.call(force.drag);
 
+	node = forceChart.select("circle");
+
+	function tick(e) {
+		 var k = 6 * e.alpha;
+	  nodes.forEach(function(o, i) {
+	    o.y += i & 1 ? k : -k;
+	    o.x += i & 2 ? k : -k;
+	  });
+
+	  node.attr("cx", function(d) { return d.x; })
+	      .attr("cy", function(d) { return d.y; });
+		}
+		*/
 };
 
 updateTrains();
+updateMap();
 
 setInterval(updateTrains,15000);
 
