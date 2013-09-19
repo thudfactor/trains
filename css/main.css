@@ -1,63 +1,45 @@
-body {
-	padding: 1em;
-}
-
-#logo {
-	font-size: 56px;
-	line-height: 1.5;
-}
-
-#logo h1 {
-	margin: 0;
-}
+/**
+ * Data-sensitive color scheme 
+ * EARLY: 09c
+ * ON TIME: 6c3
+ * LATE: f60
+ * VERY LATE: c00
+ */
 
 .trainStatusBar {
 	height: 730px;
 	overflow: auto;
+	border: 1px #333 solid;
 }
 
-#trainList {
-	font-size: 11px;
-	margin: 0; padding: 0;
-}
+/* Default status */
 #trainList li {
-	padding: 2px 4px;
-	margin: 0;
-	list-style: none;
-}
-#trainList i {
-	margin-right: 5px;
-}
-#trainList [data-status] {
 	-webkit-transition: background-color 1000ms linear;
 	-moz-transition: background-color 1000ms linear;
 	transition: background-color 1000ms linear;
 	background-color: #fff;
+	color: #333;
 }
+
+/* These trains are not yet running. */
 #trainList [data-status="N"] {
-	color: #999;
+	color: #b9b9b9;
+	background-color: #333;
 	font-style: italic;
 }
-#trainList [data-status="R"] {
-	color: #333;
-}		
-#trainList [data-status="T"] {
-	color: #333;
-}
 #trainList [data-lateclass="early"] {
-	background-color: #ccf;
+	background-color: #09c;
 }
 #trainList [data-lateclass="ontime"] {
-	background-color: #cfc;	
+	background-color: #6c3;	
 }
 #trainList [data-lateclass="late"] {
-	background-color: #fc6;	
+	background-color: #f60;	
 }
 #trainList [data-lateclass="verylate"] {
-	background-color: #900;	
-	color: #fff;
-	font-weight: bold;
+	background-color: #c00;	
 }	
+
 /* Pie chart styles */
 #onTimePortion {
 	display: inline-block;
@@ -66,51 +48,63 @@ body {
 	fill: #333;
 }	
 #onTimePortion  path.early {
-	fill: #66f;
+	fill: #09c;
 }
 #onTimePortion  path.ontime {
-	fill: #393;
+	fill: #6c3;
 }	
 #onTimePortion path.late {
-	fill: #fc0;
+	fill: #f60;
 }	
 #onTimePortion  path.verylate {
-	fill: #900;
+	fill: #c00;
 }	
 /* Map styles */
-#map .frame {
-	border: 1px #333 solid;
-	fill: #006;
-}
-.ENG, .SCT, .WLS {
-	fill: #ccc;
-}
-.IRL {
-	fill: #363;
-}
-.NIR {
-	fill: #676;
-}
 #map .station {
-	fill: #333;
+	fill: #20426e;
 }
 #map .train {
 	fill: #666;
 }
 
 #map .train.ontime {
-	fill: #cfc;
+	fill: #6c3;
 }
 
 #map .train.early {
-	fill: #ccf;
+	fill: #09c;
 }
 
 #map .train.late {
-	fill: #fc6;
+	fill: #f60;
 }
 
 #map .train.verylate {
-	fill: #900;
+	fill: #c00;
 }
+
+/* Color the map */
+.subunit-boundary.interior {
+	fill: none;
+}
+
+.subunit-boundary.exterior {
+	fill: none;
+}
+
+
+.ENG, .SCT, .WLS {
+	fill: #46515e;
+}
+.IRL {
+	fill: #363;
+}
+.NIR {
+	fill: #fff;
+}
+.IRL {
+	fill: #f9f5ec;
+}
+
+
 

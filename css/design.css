@@ -1,0 +1,95 @@
+html, body {
+	margin: 0; padding: 0;
+	background-color: #182536;
+}
+body *, *:before, *:after {
+	/* http://www.paulirish.com/2012/box-sizing-border-box-ftw/ */
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-o-box-sizing: border-box;
+	box-sizing: border-box;
+}
+.wrapper {
+	overflow: hidden;
+	background-color: #182536;
+}
+.left-col {
+	float: left;
+	width: 30%;
+	height: 730px;
+	overflow: scroll;
+}
+.right-col {
+	margin-left: 30%;
+}
+.right-col svg {
+	display: block;
+}
+#mainHeader {
+	color: #fff;
+	padding: 16px;
+}
+#mainHeader h1 {
+	color: #ff6600;
+	font-size: 31px;
+	font-weight: normal;
+	font-family: 'trebuchet ms',trebuchet,arial, helvetica, sans-serif;
+	margin: 0;
+	line-height: 1;
+}
+#mainFooter {
+	color: #fff;
+	padding: 16px;
+}
+#mainSection {
+	background-color: #aac8ce;
+	padding: 16px;
+}
+.wrapper {
+	border: 5px #182536 solid;
+}
+.left-col {
+	width: #332;
+}
+
+#trainList {
+	font-size: 11px;
+	margin: 0; padding: 0;
+}
+#trainList li {
+	margin: 0;
+	list-style: none;
+	border-bottom: 2px #182536 solid;
+}
+#trainList li:last-child {
+	border-width: 0;
+}
+#trainList i {
+	margin-right: 5px;
+}
+
+#trainList .status {
+	display: block;
+	float: left;
+	width: 80px;
+	color: #fff;
+	text-align: left;
+	padding: 4px;
+	overflow: hidden;
+	line-height: 1.2;
+}
+
+#trainList .statusText {
+	text-transform: uppercase;
+	font-weight: bold;
+}
+
+#trainList .name-time {
+	display: block;
+	margin-left: 80px;
+	background-color: #fff;
+	padding: 4px;
+	line-height: 1.2;
+}
+
+

@@ -5,7 +5,11 @@ trainListContainer = d3.select("#trainList");
 
 dashStatus = [];
 
-// Map variables; use several places.
+// Map variables; use several places. We're
+// using the albers equal-area projection
+// as recommended by Mike Bostock at 
+// http://bost.ocks.org/mike/map/, but you
+// have other options. 
 projection = d3.geo.albers()    
 			.center([-8, 53.3345])
 	    .rotate([1.5, -1.0])
@@ -13,29 +17,63 @@ projection = d3.geo.albers()
 	    .scale(10000)
 	    .translate([200,200])
 
+// Create a path function for making 
+// sense out of geospatial data. This should
+// map coordinates using the projection defined
+// above.
 path = d3.geo.path().projection(projection);
 
+// These variables will store our map layers
 map = "";
 mapTrain = "";
 mapStation= "";
 
 updateMap = function() {
 	d3.json("mapping/ireland.json",function(error,data){
+		// First, let's store our map layers so we can 
+		// get to them more easily.
 		map = d3.select("#map .mapTarget");
 		mapTrain = d3.select("#map .trainTarget");
 		mapStation = d3.select("#map .stationTarget");
 
+		// the subunits are the poltitical entity borders.
+		// In this set, Ireland, North Ireland England,
+		// Scotland, Wales.
 		subunits = topojson.feature(data,data.objects.subunits);
 		
+		// Draw those.
 		map.selectAll(".subunit")
 			.data(subunits.features).enter()
 				.append("path")
 				.attr("class",function(d){ return "subunit " + d.id})
 				.attr("d",path)
 
+		// Now, let's get border information out and
+		// draw some borders. This strategy, described by 
+		// Mike Bostock at http://bost.ocks.org/mike/map/, 
+		// "computes boundaries from the topology."
+
+		// Find interior borders.
+		map.append("path")
+			.datum(topojson.mesh(data,data.objects.subunits, function(a,b){
+				return a !== b;
+			})
+			)
+			.attr("d",path)
+			.attr("class","subunit-boundary interior")
+
+		// And now the coastlines.
+		map.append("path")
+			.datum(topojson.mesh(data,data.objects.subunits, function(a,b){
+				return a === b;
+			})
+			)
+			.attr("d",path)
+			.attr("class","subunit-boundary exterior")
+
+
 		// Lets get a station list so we can add these to the map
 		updateStations();
-
 	});
 
 }
@@ -77,26 +115,11 @@ updateTrains = function() {
 		// let's create a parallel data set that we'll use
 		// to build a pie chart of train status.
 		dashStatus = [
-			{
-				label: 'waiting',
-				value: 0
-			},
-			{
-				label: 'early',
-				value: 0
-			},
-			{
-				label: 'ontime',
-				value: 0
-			},
-			{
-				label: 'late',
-				value: 0
-			},
-			{
-				label: 'verylate',
-				value: 0
-			}
+			{ label: 'waiting', value: 0 },
+			{ label: 'early', value: 0 },
+			{	label: 'ontime', value: 0 },
+			{ label: 'late', value: 0 },
+			{	label: 'verylate', value: 0 }
 		];
 
 		// Walk the data set.
@@ -105,28 +128,50 @@ updateTrains = function() {
 			entry.Route = parts[1];
 			entry.Update = parts[2];
 
+			routeParts = entry.Route.split(" - ");
+			if(routeParts.length > 1) {
+				trainTime = routeParts[0];
+				trainRoute = routeParts[1];
+				entry.Time = trainTime;
+				entry.Route = trainRoute;
+			}
+			else {
+				entry.Time = entry.Update.replace(/Expected Departure/,"")
+				trainRoute = entry.Route;
+			}
 
 			if (entry.TrainStatus == "N") {
-				entry.LateClass = "waiting"	
+				entry.LateClass = "waiting";
+				entry.LateLabel = "Wait";
+				entry.LateIcon = "icon-circle";
 				dashStatus[0].value++			
 				return;
 			}
 			late = entry.PublicMessage.match(/\(([\-0-9].*) mins late\)/);
+			entry.Route = entry.Route.replace(/\([\-0-9].* mins late\)/,'');
 			entry.Late = late[1];
 			if (entry.Late < 0) {
 				entry.LateClass = "early";
+				entry.LateLabel = "Early";
+				entry.LateIcon = "icon-flag-checkered";
 				dashStatus[1].value++;
 			}
 			else if (entry.Late < 5) {
 				entry.LateClass = "ontime";
+				entry.LateLabel = "On Time";
+				entry.LateIcon = "icon-thumbs-up";
 				dashStatus[2].value++;
 			}
 			else if (entry.Late < 15) {
 				entry.LateClass = "late";
+				entry.LateLabel = "Late";
+				entry.LateIcon = "icon-warning-sign";
 				dashStatus[3].value++;
 			}
 			else {
 				entry.LateClass = "verylate";
+				entry.LateLabel = "OMG";
+				entry.LateIcon = "icon-frown";
 				dashStatus[4].value++;
 			}
 		});
@@ -189,8 +234,8 @@ displayTrains = function() {
 	// Now, let's treat the 'enter' selection of data -- 
 	// the data that is being added.
 	newListItems = trainList.enter().append("li")
-	newListItems.append("i");
-	newListItems.append("span")
+	statusBlock = newListItems.append("span").attr("class","status")
+	nameBlock = newListItems.append("span").attr("class","name-time")
 
 	// Just remove items that are leaving the display.
 	trainList.exit().remove();	
@@ -201,27 +246,18 @@ displayTrains = function() {
 		"data-status" : function(d) { return d.TrainStatus }
 	});
 
-	trainList.select("i").attr("class",function(d) {
-		switch(d.LateClass) {
-		 case "early":
-		 	icon = "icon-flag-checkered";
-		 break;
-		 case "ontime":
-		 	icon = "icon-thumbs-up";
-		 break;
-		 case "late":
-		 	icon = "icon-warning-sign";
-		 break;
-		 case "verylate":
-		 	icon = "icon-frown";
-		 break;
-		 default: 
-		 	icon = "icon-circle";
-		}
-		return icon;
+	statusBlock.append("i").attr("class",function(d) { return d.LateIcon; });
+	statusBlock.append("span").attr("class","statusText").text(function(d) { return d.LateLabel} );
+	statusBlock.append("br")
+	statusBlock.append("span").attr("class","time").text(function(d) {
+		if (!d.Late) return "";
+		unit = (Math.abs(d.Late) == 1) ? " min" : " mins"
+		return Math.abs(d.Late) + unit;
 	});
 
-	trainList.select("span").text(function(d) { return d.TrainCode + " " + d.Route })
+	nameBlock.append("span").attr("class","trainCode").text(function(d) { return d.TrainCode + " " + d.Time + " " + d.Route});
+	nameBlock.append("br")
+	nameBlock.append("span").attr("class","trainRoute").text(function(d) { return d.Update });
 
 	// Show train positions on the map
 	
@@ -266,8 +302,8 @@ displayTrains = function() {
 	// Our pie chart gets updated when the trains are, too, so let's test that out.
 
 	arc = d3.svg.arc()
-		.outerRadius(20)
-		.innerRadius(12);
+		.outerRadius(11)
+		.innerRadius(7);
 
 	pie = d3.layout.pie()
 		.sort(null)
@@ -299,7 +335,7 @@ updateMap();
 updateTrains();
 
 
-setInterval(updateTrains,15000);
+setInterval(updateTrains,30000);
 
 
 

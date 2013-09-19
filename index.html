@@ -2,45 +2,63 @@
 <html>
 <head>
 	<meta charset="utf-8" />
-	<title>Irish Trains</title>
+	<title>IE Trnsttr</title>
 	<script src="http://codeorigin.jquery.com/jquery-2.0.3.min.js"></script>
-	<script src="/components/bootstrap/js/bootstrap.min.js"></script>
-	<script src="/components/d3.v3.min.js"></script>
+	<script src="components/bootstrap/js/bootstrap.min.js"></script>
+	<script src="components/d3.v3.min.js"></script>
 	<script src="http://d3js.org/topojson.v1.min.js"></script>
-	<link rel="stylesheet" href="/components/bootstrap/css/bootstrap.min.css" />
-	<link rel="stylesheet" href="/components/bootstrap/css/bootstrap-responsive.min.css" />
-	<link rel="stylesheet" href="/components/font-awesome/css/font-awesome.min.css" />
-	<link rel="stylesheet" href="/css/main.css" />
+	<link rel="stylesheet" href="components/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="components/bootstrap/css/bootstrap-responsive.min.css" />
+	<link rel="stylesheet" href="components/font-awesome/css/font-awesome.min.css" />
+	<link rel="stylesheet" href="css/design.css" />
+	<link rel="stylesheet" href="css/main.css" />
 	<style>
 	</style>
 </head>
 <body>
-	<header>
+	<header id="mainHeader">
 		<h1 id="logo">
-			<svg width="40" height="40" id="onTimePortion">
-				<g class="pieTarget" transform="translate(20,20)"></g>
+			<svg width="22" height="22" id="onTimePortion">
+				<g class="pieTarget" transform="translate(11,11)"></g>
 			</svg>
-			IE Trn<span>spttr</span>: 
+			IE Trn<span>spttr</span> 
 		</h1>
 	</header>
-	<section class="row">
-		<div class="left-col span4 trainStatusBar">
-			<ul id="trainList">
-			</ul>
-		</div>
-		<div class="right-col span8">
-			<svg width="700px" height="730px" id="map">
-				<rect class="frame" width="700px" height="730px" x="0" y="0" />
-				<g class="mapTarget"></g>
-				<g class="stationTarget"></g>
-				<g class="trainTarget"></g>
-			</svg>
+	<section id="mainSection">
+
+		<div class="wrapper">
+			<div class="left-col trainStatusBar">
+				<ul id="trainList">
+				</ul>
+			</div>
+			<div class="right-col">
+				<svg width="100%" height="730px" id="map">
+					<g class="mapTarget"></g>
+					<g class="stationTarget"></g>
+					<g class="trainTarget"></g>
+				</svg>
+			</div>
 		</div>
 
 	</section>
-	<footer>
-
+	<footer id="mainFooter">
+		<p>Test content for the footer.</p>
 	</footer>
-	<script src="/js/main.js"></script>
+	<!-- SVG Filters for future use.
+	<svg>
+		<defs>
+			<filter id="css_drop_shadow">
+				<feGaussianBlur stdDeviation="2" in="SourceAlpha" />
+				<feOffset dx="2" dy="2" result="offsetblur" />
+				<feFlood flood-color="#000" />
+				<feComposite operator="in"  in2="offsetblur" />
+				<feMerge>
+					<feMergeNode/>
+					<feMergeNode in="SourceGraphic" />
+				</feMergeNode>
+			</filter>
+		</defs>
+	</svg> -->
+	<script src="js/main.js"></script>
 </body>
 </html>
