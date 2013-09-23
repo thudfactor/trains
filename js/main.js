@@ -28,16 +28,9 @@ map = "";
 mapTrain = "";
 mapStation= "";
 
-// Bind form change data
-radios = d3.selectAll("input[name=\"traintype\"]").on("change",function(){
-	$(this).siblings("i").removeClass().addClass("icon-ok-circle");
-	$(this).parents("label").siblings().find("i").removeClass().addClass("icon-circle-blank");
+updateTracker = ""; // Used for setInterval
 
-	updateStations(this.value);
-	updateTrains(this.value);
-});
-
-console.log(radios);
+currentFilter = "A";
 
 updateMap = function() {
 	d3.json("mapping/ireland.json",function(error,data){
@@ -113,7 +106,7 @@ updateMap = function() {
  */
 updateStations = function(filter) {
 	if (!filter)
-		filter = 'A';	
+		filter = currentFilter;	
 	// Make our API request; on return, the data is assigned
 	// to our global data object and the station display routine
 	// is invoked.
@@ -127,8 +120,9 @@ updateStations = function(filter) {
  * Update train list
  */
 updateTrains = function(filter) {
+	console.log("updatingTrains");
 	if (!filter)
-		filter = 'A';
+		filter = currentFilter;
 	d3.json("api.php?q=trains&t=" + filter,function(error,data){
 		// Make our API request; on return, the data is assigned
 		// to our global data object and the train display routine
@@ -377,11 +371,27 @@ displayTrains = function() {
 
 }
 
+// Bind form change data
+radios = d3.selectAll("input[name=\"traintype\"]").on("change",function(){
+	// First, stop the existing update interval.
+	clearInterval(updateTracker);
+
+	$(this).siblings("i").removeClass().addClass("icon-ok-circle");
+	$(this).parents("label").siblings().find("i").removeClass().addClass("icon-circle-blank");
+
+	currentFilter = this.value;
+
+	updateStations();
+	updateTrains();
+
+	// reset the timeout
+	updateTracker = setInterval(updateTrains,30000);
+});
+
 updateMap();
 updateTrains();
 
-
-setInterval(updateTrains,30000);
+updateTracker = setInterval(updateTrains,30000);
 
 
 
