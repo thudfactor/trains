@@ -61,6 +61,7 @@ updateMap = function() {
 		// "computes boundaries from the topology."
 
 		// Find interior borders.
+		/*
 		map.append("path")
 			.datum(topojson.mesh(data,data.objects.subunits, function(a,b){
 				return a !== b;
@@ -68,8 +69,10 @@ updateMap = function() {
 			)
 			.attr("d",path)
 			.attr("class","subunit-boundary interior")
+		*/
 
 		// And now the coastlines.
+		/*
 		map.append("path")
 			.datum(topojson.mesh(data,data.objects.subunits, function(a,b){
 				return a === b;
@@ -77,7 +80,8 @@ updateMap = function() {
 			)
 			.attr("d",path)
 			.attr("class","subunit-boundary exterior")
-
+		*/
+		
 		// counties
 		map.append("path")
 			.datum(counties)

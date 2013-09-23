@@ -1,1 +1,5 @@
 http://bost.ocks.org/mike/map/
+
+-clipdst -11.0133788 51.222 -5.3616054406 55.4370580912
+
+topojson --id-property su_a3 -p name=NAME -p name -o ireland.json subunits.json places.json counties.json smaller_rr.json
