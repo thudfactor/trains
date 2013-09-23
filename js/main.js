@@ -39,7 +39,11 @@ updateMap = function() {
 		// the subunits are the poltitical entity borders.
 		// In this set, Ireland, North Ireland England,
 		// Scotland, Wales.
+		console.log(data);
 		subunits = topojson.feature(data,data.objects.subunits);
+		counties = topojson.feature(data,data.objects.counties);
+		places = topojson.feature(data,data.objects.places);
+		rr = topojson.feature(data,data.objects.smaller_rr);
 		
 		// Draw those.
 		map.selectAll(".subunit")
@@ -71,6 +75,21 @@ updateMap = function() {
 			.attr("d",path)
 			.attr("class","subunit-boundary exterior")
 
+		// counties
+		map.append("path")
+			.datum(counties)
+			.attr("d",path)
+			.attr("class","counties")
+			.style({
+				fill: "none",
+				stroke: "#ccc"
+			});
+
+		// railroads
+		map.append("path")
+			.datum(rr)
+			.attr("d",path)
+			.attr("class","railroads")
 
 		// Lets get a station list so we can add these to the map
 		updateStations();
