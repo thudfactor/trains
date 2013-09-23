@@ -28,6 +28,17 @@ map = "";
 mapTrain = "";
 mapStation= "";
 
+// Bind form change data
+radios = d3.selectAll("input[name=\"traintype\"]").on("change",function(){
+	$(this).siblings("i").removeClass().addClass("icon-ok-circle");
+	$(this).parents("label").siblings().find("i").removeClass().addClass("icon-circle-blank");
+
+	updateStations(this.value);
+	updateTrains(this.value);
+});
+
+console.log(radios);
+
 updateMap = function() {
 	d3.json("mapping/ireland.json",function(error,data){
 		// First, let's store our map layers so we can 
@@ -39,7 +50,6 @@ updateMap = function() {
 		// the subunits are the poltitical entity borders.
 		// In this set, Ireland, North Ireland England,
 		// Scotland, Wales.
-		console.log(data);
 		subunits = topojson.feature(data,data.objects.subunits);
 		counties = topojson.feature(data,data.objects.counties);
 		places = topojson.feature(data,data.objects.places);
@@ -101,11 +111,13 @@ updateMap = function() {
 /*
  * Update station list
  */
-updateStations = function() {
+updateStations = function(filter) {
+	if (!filter)
+		filter = 'A';	
 	// Make our API request; on return, the data is assigned
 	// to our global data object and the station display routine
 	// is invoked.
-	d3.json("api.php?q=stations",function(error,data){
+	d3.json("api.php?q=stations&t=" + filter,function(error,data){
 		stationData = data.ArrayOfObjStation.objStation;
 		displayStations();
 	});
@@ -114,8 +126,10 @@ updateStations = function() {
 /*
  * Update train list
  */
-updateTrains = function() {
-	d3.json("api.php?q=trains",function(error,data){
+updateTrains = function(filter) {
+	if (!filter)
+		filter = 'A';
+	d3.json("api.php?q=trains&t=" + filter,function(error,data){
 		// Make our API request; on return, the data is assigned
 		// to our global data object and the train display routine
 		// is invoked.
@@ -203,7 +217,10 @@ updateTrains = function() {
  * Show the stations in a list
  */
 displayStations = function () {
-	mapStation.selectAll(".station").data(stationData).enter()
+	stationKey = function(d) {return d.StationDesc;}
+
+	stations = mapStation.selectAll(".station").data(stationData,stationKey);
+	stations.enter()
 		.append("rect")
 		.attr({
 			"x": -5,
@@ -214,7 +231,13 @@ displayStations = function () {
 			"transform": function(d) {
 				return "translate(" + projection([d.StationLongitude,d.StationLatitude]) + ")";
 			}
+		})
+		.append("title")
+		.text(function (d){
+			return d.StationDesc;
 		});
+
+		stations.exit().remove();
 
 	/*
 	stationListContainer.selectAll("li")
@@ -298,6 +321,10 @@ displayTrains = function() {
 				"transform": function(d) {
 					return "translate(" + projection([d.TrainLongitude,d.TrainLatitude]) + ")";
 				}				
+			})
+			.append("title")
+			.text(function(d){
+				return d.TrainCode + " " + d.Update;
 			});
 
 		trainPins.exit().remove();

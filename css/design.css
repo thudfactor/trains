@@ -92,4 +92,22 @@ body *, *:before, *:after {
 	line-height: 1.2;
 }
 
+.controls {
+	color: #fff;
+	text-align: center;
+}
+
+.controls form {
+	margin-bottom: 0;
+}
+
+.controls label {
+	display: inline-block;
+	margin-right: 1em;
+}
+.controls input {
+	position: absolute;
+	left: -999999px;
+}
+
 
